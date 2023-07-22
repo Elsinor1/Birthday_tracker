@@ -2,6 +2,8 @@ import csv
 import os
 import validators
 import datetime
+import customtkinter as CTk
+from tkinter import *
 
 
 class Contacts():
@@ -190,23 +192,47 @@ class Contact():
             raise ValueError("Incorrect date format, usage: MM/DD")
 
 
-class Greeting():
-
+class App(CTk.CTk):
     def __init__(self):
+        super().__init__()
+        # WINDOW CONFIGURATION
+        self.title("Birthday tracker")
+        self.geometry(f"{800}x{400}")
+
+        # ---HEADER----
+        self.header_frame = CTk.CTkFrame(self, corner_radius=0)
+        self.header_frame.grid(row=0, column=0, sticky="nsew", pady=(20, 20))
+        self.header_label = CTk.CTkLabel(
+            self.header_frame,
+            text="Birthday tracker",
+            font=CTk.CTkFont(size=30, weight="bold"),
+        )
+        self.header_label.grid(row=1, column=0, sticky="ew")
+
+        # ---OPTIONS---
+        self.main_frame = CTk.CTkFrame(self, corner_radius=0)
+        self.main_frame.grid(row=1, column=0, sticky="nsew", pady=(20, 20))
+        # Option buttons
+        self.contact_button = CTk.CTkButton(
+            self.main_frame, command=self.display_contacts, text="Contacts")
+        self.contact_button.grid(
+            row=0, sticky="nsew", pady=(5, 5))
+
+        # Next birthday
+        self.birthday_name = StringVar(value="Martin")
+        self.birthday_date = StringVar(value="01/17")
+        self.birthday_label = CTk.CTkLabel(
+            self.main_frame, text=f"Next birthday has {self.birthday_name.get()} on {self.birthday_date.get()}", font=CTk.CTkFont(size=15))
+        self.birthday_label.grid(row=1)
+        # ---CONTACTS---
+
+        # self.option_list.pack()
+
+    def display_contacts():
+        # ...
         return
-
-    def __str__(self):
-        return
-
-
-def main():
-    person_1 = Contact("Martin", relationship="friend")
-    print(person_1)
-    person_1.change(last="Lokvenc", relationship="friend", phone="732254668")
-    print(person_1)
-    person_1.change(first="Lokvenc")
-    print(person_1)
 
 
 if __name__ == "__main__":
-    main()
+    app = App()
+    app.mainloop()
