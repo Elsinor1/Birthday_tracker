@@ -214,24 +214,62 @@ class App(tk.Tk):
         # ---OPTIONS---
         self.main_frame = ttk.Frame(self)
         self.main_frame.grid(row=1, column=0, sticky="nsew", pady=(20, 20))
-        # Option buttons
+        # Birthday frame
+        self.birthday_frame = tk.Frame(self.main_frame,)
+        self.birthday_frame.grid(row=2)
+        # Contacts buttons
         self.contact_button = ttk.Button(
-            self.main_frame, command=self.display_contacts, text="Contacts")
+            self.birthday_frame, command=self.display_contacts, text="Contacts")
         self.contact_button.grid(
             row=0, sticky="nsew", pady=(5, 5))
-
-        # Next birthday
+        # Display variables
         self.birthday_name = tk.StringVar(value="Martin")
         self.birthday_date = tk.StringVar(value="01/17")
+        # Next birthday dislay
         self.birthday_label = ttk.Label(
-            self.main_frame, text=f"Next birthday has {self.birthday_name.get()} on {self.birthday_date.get()}", font=Font(size=15))
+            self.birthday_frame, text=f"Next birthday has {self.birthday_name.get()} on {self.birthday_date.get()}", font=Font(size=15))
         self.birthday_label.grid(row=1)
+
         # ---CONTACTS---
+        # Initial display variable
+        self.contact_display = tk.BooleanVar(value=False)
+        # Contacts frame 
+        self.contacts_frame = tk.Frame(self.main_frame)
+        # Add to list button
+        self.contact_button = ttk.Button(
+            self.contacts_frame, command=self.add_to_contacts, text="Add to list")
+        self.contact_button.grid(
+            row=2, column=1, sticky="nsew", pady=(5, 5))
+        # Remove from list button
+        self.contact_button = ttk.Button(
+            self.contacts_frame, command=self.remove_from_contacts, text="Remove from contacts")
+        self.contact_button.grid(
+            row=2, column=2, sticky="nsew", pady=(5, 5))
+        # Return button
+        self.contact_button = ttk.Button(
+            self.contacts_frame, command=self.display_contacts, text="Return")
+        self.contact_button.grid(
+            row=2, column=3, sticky="nsew", pady=(5, 5))
+        # Listbox of contacts
+        self.contacts_list = tk.Listbox(self.contacts_frame, )
+        self.contacts_list.grid(row=3, columnspan=3)
 
-        # self.option_list.pack()
 
-    def display_contacts():
-        # ...
+    def display_contacts(self):
+        if self.contact_display == True:
+            self.birthday_frame.grid(row=2)
+            self.contacts_frame.grid_forget()
+            self.contact_display = False
+        else:
+            self.birthday_frame.grid_forget()
+            self.contacts_frame.grid(row=2)
+            self.contact_display = True
+        return
+    
+    def add_to_contacts(self):
+        return
+    
+    def remove_from_contacts(self):
         return
 
 
