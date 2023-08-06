@@ -21,7 +21,7 @@ class App(tk.Tk):
         )
         self.header_label.grid(sticky="ew")
 
-        # ---OPTIONS---
+        # ---MAIN PAGE---
         self.main_frame = tk.Frame(self, highlightbackground="blue", highlightthickness=2)
         self.main_frame.grid(row=1, sticky="nsew", padx=20, pady=(0, 20))
         # Birthday frame
@@ -45,7 +45,7 @@ class App(tk.Tk):
         # Initial display variable
         self.contact_display = tk.BooleanVar(value=False)
         # Contacts frame 
-        self.contacts_frame = tk.Frame(self.main_frame)
+        self.contacts_frame = tk.Frame(self.main_frame, highlightbackground="blue", highlightthickness=2)
         # Add to list button
         self.add_contact_button = tk.Button(
             self.contacts_frame, command=self.go_to_contact, text="Add new contact")
@@ -67,16 +67,16 @@ class App(tk.Tk):
         self.return_to_cont.grid(
             row=3, column=2, sticky="nsew", pady=5, padx=5)
         # Listbox of contacts
-        self.contacts_listbox = tk.Listbox(self.contacts_frame, width=50, selectmode="SINGLE")
+        self.contacts_listbox = tk.Listbox(self.contacts_frame, width=45, selectmode="SINGLE")
         self.contacts_listbox.grid(row=4, columnspan=3, pady=5, padx=5, sticky="news")
         self.listbox_update()
 
         # ---ADD CONTACT FRAME---
         # Frame
-        self.add_contact_frame = tk.Frame(self.main_frame)
+        self.add_contact_frame = tk.Frame(self.main_frame, highlightbackground="blue", highlightthickness=2)
         # Label
         self.add_contact_label = tk.Label(self.add_contact_frame, text="Add new contact", font=Font(size=20))
-        self.add_contact_label.grid(columnspan=2, sticky="ewns")
+        self.add_contact_label.grid(columnspan=2, sticky="ewns", padx=10, pady=10)
         # Entry boxes with labels
         self.first_name_label = tk.Label(self.add_contact_frame, text="First name")
         self.first_name_label.grid(row=2, column=0)
@@ -96,10 +96,10 @@ class App(tk.Tk):
         self.email_entry.grid(row=5, column=1)
         # Buttons
         self.add_button = tk.Button(self.add_contact_frame, text="Add to contacts", command=self.add_to_contacts)
-        self.add_button.grid(row=6, column=0)
+        self.add_button.grid(row=6, column=0, padx=10, pady=10)
         self.save_edit_button = tk.Button(self.add_contact_frame, text="Save contact", command=self.edit_contact)
         self.return_button = tk.Button(self.add_contact_frame, text="Return", command=self.return_to_contacts)
-        self.return_button.grid(row=6, column=1)
+        self.return_button.grid(row=6, column=1, padx=10, pady=10, sticky="nse")
 
 
     def display_contacts(self):
@@ -109,14 +109,14 @@ class App(tk.Tk):
             self.contact_display = False
         else:
             self.birthday_frame.grid_forget()
-            self.contacts_frame.grid(row=2)
+            self.contacts_frame.grid(row=2, sticky="nsew", padx=10)
             self.contact_display = True
         return
     
     
     def go_to_contact(self, button="add"):
         self.contacts_frame.grid_forget()
-        self.add_contact_frame.grid(row=2)
+        self.add_contact_frame.grid(row=2, padx=20, sticky="news")
         if button == "add":
             self.add_button.grid(row=6, column=0)
             self.save_edit_button.grid_forget()
@@ -128,7 +128,7 @@ class App(tk.Tk):
 
     def return_to_contacts(self):
         self.add_contact_frame.grid_forget()
-        self.contacts_frame.grid(row=2)
+        self.contacts_frame.grid(row=2, padx=10, sticky="nsew")
         self.add_button.grid(row=6, column=0)
 
 
