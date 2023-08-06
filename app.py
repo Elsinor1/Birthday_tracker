@@ -11,6 +11,9 @@ class App(tk.Tk):
         self.title("Birthday tracker")
         self.geometry(f"{350}x{400}")
 
+        # CONTACTS VAR INITIALIZATION
+        self.contact_list = Contacts()
+
         # ---HEADER----
         self.header_frame = tk.Frame(self, highlightbackground="blue", highlightthickness=2)
         self.header_frame.grid(sticky="nswe", padx=20, pady=(20, 10))
@@ -33,15 +36,15 @@ class App(tk.Tk):
         self.contact_button.grid(
             row=0, sticky="ns", pady=5, padx=5)
         # Display variables
-        self.birthday_name = tk.StringVar(value="Martin")
-        self.birthday_date = tk.StringVar(value="01/17")
-        # Next birthday dislay
+        self.birthday_phrase = tk.StringVar(value="")
+        # Checks who has the next b-day
+        self.check_next_b()
+        # Next b-day display
         self.birthday_label = tk.Label(
-            self.birthday_frame, text=f"Next birthday has {self.birthday_name.get()} on {self.birthday_date.get()}", font=Font(size=15))
+            self.birthday_frame, font=Font(size=15), textvariable=self.birthday_phrase)
         self.birthday_label.grid(row=1)
 
         # ---CONTACTS---
-        self.contact_list = Contacts()
         # Initial display variable
         self.contact_display = tk.BooleanVar(value=False)
         # Contacts frame 
@@ -107,6 +110,7 @@ class App(tk.Tk):
             self.birthday_frame.grid(row=2)
             self.contacts_frame.grid_forget()
             self.contact_display = False
+            self.check_next_b()
         else:
             self.birthday_frame.grid_forget()
             self.contacts_frame.grid(row=2, sticky="nsew", padx=10)
@@ -199,7 +203,6 @@ class App(tk.Tk):
             self.email_entry.delete(0, 100)
             self.listbox_update()
             self.return_to_contacts()
-
         return
 
     
@@ -207,7 +210,16 @@ class App(tk.Tk):
         self.contacts_listbox.delete(0, self.contacts_listbox.size())
         for index, item in enumerate(self.contact_list.get()):
             self.contacts_listbox.insert(index, item.get())
-            # print(item)
+        return
+        
+    def check_next_b(self):
+        next_b_day_contact = self.contact_list.next_b_day()
+        if next_b_day_contact != None:
+            self.birthday_name = tk.StringVar(value=next_b_day_contact.first)
+            self.birthday_date = tk.StringVar(value=next_b_day_contact.birthday)
+            self.birthday_phrase.set(f"Next birthday has {self.birthday_name.get()} on {self.birthday_date.get()}")
+        return
+    
 
 
 if __name__ == "__main__":

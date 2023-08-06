@@ -1,7 +1,7 @@
 import csv
 import os
 from validator_collection import validators
-import datetime
+from datetime import date, datetime
 
 
 class Contacts():
@@ -48,6 +48,22 @@ class Contacts():
 
     def save(self, output_path):
         return
+    
+    def days_to_birthday(self, contact):
+        today = date.today()
+        month, day = contact.birthday.split("/")
+        next = date(today.year, int(month), int(day))
+        if next < today:
+            next = next.replace(year=today.year + 1)
+        time_to_birthday = abs(next - today)
+        return time_to_birthday.days
+    
+    def next_b_day(self):
+        sorted_list = sorted(self._contact_list, key=self.days_to_birthday)
+        if len(sorted_list) > 0:
+            return sorted_list[0]   
+        else:
+            return None
 
 
 class Contact():
@@ -147,7 +163,7 @@ class Contact():
             raise ValueError("Date must be a str")
         date_format = "%m/%d"
         try:
-            date = datetime.datetime.strptime(birthday, date_format)
+            date = datetime.strptime(birthday, date_format)
             self._birthday = f"{date.month}/{date.day}"
         # If the date validation goes wrong
         except ValueError:
