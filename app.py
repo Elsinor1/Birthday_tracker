@@ -125,6 +125,7 @@ class App(tk.Tk):
             self.save_edit_button.grid(row=6, column=0)
         return
     
+
     def return_to_contacts(self):
         self.add_contact_frame.grid_forget()
         self.contacts_frame.grid(row=2)
@@ -155,37 +156,50 @@ class App(tk.Tk):
 
 
     def remove_from_contacts(self):
-        cur_index = self.contacts_listbox.curselection()[0]
+        try:
+            cur_index = self.contacts_listbox.curselection()[0]
+        except IndexError:
+            return
         self.contact_list.remove(cur_index)
         self.listbox_update()
         return
     
+
     def go_to_edit(self):
         # Gets index of contact list
         self.edited_contact_index = tk.IntVar()
-        self.edited_contact_index = self.contacts_listbox.curselection()[0]
+        try:
+            self.edited_contact_index = self.contacts_listbox.curselection()[0]
+        except IndexError:
+            return
         # Goes to add contact layout
         self.go_to_contact(button="edit")
         # Displays current values
-        edited_contact = self.contact_list[self.edited_contact_index]
-        self.first_name_entry.insert(0, edited_contact.name)
+        edited_contact = self.contact_list.get()[self.edited_contact_index]
+        self.first_name_entry.insert(0, edited_contact.first)
         self.last_name_entry.insert(0, edited_contact.last)
         self.birthday_entry.insert(0, edited_contact.birthday)
         self.email_entry.insert(0, edited_contact.email)
         return
     
+
     def edit_contact(self):
         try:
             edited_contact = Contact(self.first_name_entry.get(), self.birthday_entry.get())
             edited_contact.last = self.last_name_entry.get()
             edited_contact.email = self.email_entry.get()
         except Exception as e:
-            messagebox.showerror(str(e))
+            messagebox.showerror(message=str(e))
         else:
-            self.contact_list.remove[self.edited_contact_index]
+            self.contact_list.remove(self.edited_contact_index)
             self.contact_list.add(edited_contact) 
+            self.first_name_entry.delete(0, 100)
+            self.last_name_entry.delete(0, 100)
+            self.birthday_entry.delete(0, 100)
+            self.email_entry.delete(0, 100)
             self.listbox_update()
             self.return_to_contacts()
+
         return
 
     

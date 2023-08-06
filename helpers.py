@@ -1,25 +1,36 @@
 import csv
 import os
-import validators
+from validator_collection import validators
 import datetime
 
 
 class Contacts():
     def __init__(self):
-        self.contact_list = list()
+        self._contact_list = list()
         
         return
 
     def __str__(self):
         return "Contact list: /n" + self.contact_list
 
-    def get(self):
-        return self.contact_list
+    @property
+    def contact_list(self):
+        raise Exception("Wrong usage, use .get() method")
+    
+    @contact_list.setter
+    def contact_list(self):
+         raise Exception("Wrong usage, use .add() or .remove method")
 
-    def add(self, person):
+    def get(self):
+        return self._contact_list
+
+    def add(self, contact):
+        self._contact_list.append(contact)
+        self._contact_list.sort(key=lambda x: x.first)
         return
 
-    def remove(self, person):
+    def remove(self, index):
+        self._contact_list.remove(self._contact_list[index])
         return
 
     def load(self, input_path):
@@ -40,46 +51,41 @@ class Contacts():
 
 
 class Contact():
-    def __init__(self, first, middle="", last="", relationship="friend", email="", phone="", birthday=""):
-        self._relationship_types = ["friend", "family", "colleague", "other"]
+    def __init__(self, first, birthday, last="", email=""):
         self.first = first
-        self.middle = middle
         self.last = last
-        self.relationship = relationship
         self.email = email
-        self.phone = phone
         self.birthday = birthday
 
         return
 
     def __str__(self):
         return_string = self.first
-        if self._middle:
-            return_string += " " + self._middle
         if self._last:
             return_string += " " + self._last
-        if self._relationship:
-            return_string += ", relationship: " + self._relationship
         if self._email:
             return_string += ", email: " + self._email
         if self._phone:
             return_string += ", phone: " + self._phone
+        return return_string
+    
 
+    def get(self):
+        return_string = self.first
+        if self._last:
+            return_string += " " + self._last
+        return_string += f" has birthday on {self.birthday}"
         return return_string
 
-    def change(self, first="", middle="", last="", relationship="", email="", phone=""):
+    def change(self, first="", last="",birthday="", email=""):
         if first:
             self.first = first
-        if middle:
-            self.middle = middle
         if last:
             self.last = last
-        if relationship:
-            self.relationship = relationship
         if email:
             self.email = email
-        if phone:
-            self.phone = phone
+        if birthday:
+            self.birthday = birthday
         print("Contact has been updated")
         return
 
@@ -90,25 +96,11 @@ class Contact():
     @first.setter
     def first(self, first):
         if not type(first) == str:
-            raise TypeError("Name must be a string")
+            raise TypeError("First name: Name must be a string")
         if not first.isalpha():
-            raise ValueError("All characters must be from alphabet")
+            raise ValueError("First name: All characters must be from alphabet")
         self._first = first.capitalize()
 
-    @property
-    def middle(self):
-        return self._middle
-
-    @middle.setter
-    def middle(self, middle):
-        if middle == "" or middle == None:
-            self._middle = ""
-            return
-        if not type(middle) == str:
-            raise TypeError("Name must be a string")
-        if not middle.isalpha():
-            raise ValueError("All characters must be from alphabet")
-        self._middle = middle.capitalize()
 
     @property
     def last(self):
@@ -120,28 +112,11 @@ class Contact():
             self._last = ""
             return
         if not type(last) == str:
-            raise TypeError("Name must be a string")
+            raise TypeError("Last name: Name must be a string")
         if not last.isalpha():
-            raise ValueError("All characters must be from alphabet")
+            raise ValueError("Last name: All characters must be from alphabet")
         self._last = last.capitalize()
 
-    @property
-    def relationship(self):
-        return self._relationship
-
-    @relationship.setter
-    def relationship(self, relationship):
-        if relationship == "" or relationship == None:
-            self.relationship = ""
-            return
-        if not type(relationship) == str:
-            raise TypeError("Relationship must be a string")
-        if not relationship.isalpha():
-            raise ValueError("All characters must be from alphabet")
-        if relationship.lower() not in self._relationship_types:
-            raise ValueError(
-                f"Relationship must be one of following: {self._relationship_types}")
-        self._relationship = relationship.lower()
 
     @property
     def email(self):
@@ -154,22 +129,13 @@ class Contact():
             return
         if not email or type(email) != str:
             raise ValueError("Email must be a string")
-        if not validators.email.email(email, whitelist=None):
+        try:
+            email = validators.email(email, whitelist=None).strip()
+        except ValueError:
             raise ValueError("Incorrect email adress")
-        self.email = email.strip()
+        else:
+            self._email = email
 
-    @property
-    def phone(self):
-        return self._phone
-
-    @phone.setter
-    def phone(self, phone):
-        if phone == "" or phone == None:
-            self._phone = ""
-            return
-        if not phone or not phone.strip(" ").isdigit():
-            raise ValueError("Phone number must be a number")
-        self._phone = phone.strip(" ")
 
     @property
     def birthday(self):
@@ -177,16 +143,12 @@ class Contact():
 
     @birthday.setter
     def birthday(self, birthday):
-        if birthday == "" or birthday == None:
-            self._birthday = ""
-            return
         if type(birthday) != str:
             raise ValueError("Date must be a str")
         date_format = "%m/%d"
         try:
             date = datetime.datetime.strptime(birthday, date_format)
             self._birthday = f"{date.month}/{date.day}"
-
         # If the date validation goes wrong
         except ValueError:
             raise ValueError("Incorrect date format, usage: MM/DD")
