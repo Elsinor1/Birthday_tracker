@@ -123,6 +123,7 @@ class App(tk.Tk):
             row=6, column=1, padx=10, pady=10, sticky="nse")
 
     def display_contacts(self):
+        """Switches between main page and contacts page"""
         if self.contact_display == True:
             self.birthday_frame.grid(row=2)
             self.contacts_frame.grid_forget()
@@ -135,6 +136,10 @@ class App(tk.Tk):
         return
 
     def go_to_contact(self, button="add"):
+        """Switches to contact add/ edit page, 
+            button=add shows the add button
+            button=edit shows the edit button
+        """
         self.contacts_frame.grid_forget()
         self.add_contact_frame.grid(row=2, padx=20, sticky="news")
         if button == "add":
@@ -146,18 +151,20 @@ class App(tk.Tk):
         return
 
     def return_to_contacts(self):
+        """Returns to contacts page"""
         self.add_contact_frame.grid_forget()
         self.contacts_frame.grid(row=2, padx=10, sticky="nsew")
         self.add_button.grid(row=6, column=0)
 
     def add_to_contacts(self):
+        """Creates new contact based on data from entry boxes"""
         try:
             contact = Contact(first=self.first_name_entry.get(),
                               birthday=self.birthday_entry.get())
-            last = self.last_name_entry.get()
+            last: str = self.last_name_entry.get()
             if last:
                 contact.last = last
-            email = self.email_entry.get()
+            email: str = self.email_entry.get()
             if email:
                 contact.email = email
         except Exception as e:
@@ -175,8 +182,9 @@ class App(tk.Tk):
         return
 
     def remove_from_contacts(self):
+        """Removes selected contact from contact list"""
         try:
-            cur_index = self.contacts_listbox.curselection()[0]
+            cur_index: int = self.contacts_listbox.curselection()[0]
         except IndexError:
             return
         self.contact_list.remove(cur_index)
@@ -185,10 +193,12 @@ class App(tk.Tk):
         return
 
     def go_to_edit(self):
+        """Displays edit contact page and loads contact information in entry boxes"""
         # Gets index of contact list
         self.edited_contact_index = tk.IntVar()
         try:
-            self.edited_contact_index = self.contacts_listbox.curselection()[0]
+            self.edited_contact_index: int = self.contacts_listbox.curselection()[
+                0]
         except IndexError:
             return
         # Goes to add contact layout
@@ -202,6 +212,7 @@ class App(tk.Tk):
         return
 
     def edit_contact(self):
+        """Deletes edites contact from list and adds a new one based on contact information typed in entry boxes"""
         try:
             edited_contact = Contact(
                 self.first_name_entry.get(), self.birthday_entry.get())
@@ -221,12 +232,14 @@ class App(tk.Tk):
         return
 
     def listbox_update(self):
+        """Updates listbox"""
         self.contacts_listbox.delete(0, self.contacts_listbox.size())
         for index, item in enumerate(self.contact_list.get()):
             self.contacts_listbox.insert(index, item.get())
         return
 
     def check_next_b(self):
+        """Calculates contact with nearest birthday and updates the birthday phrase shown on main page"""
         next_b_day_contact = self.contact_list.next_b_day()
         if next_b_day_contact != None:
             self.birthday_name = tk.StringVar(value=next_b_day_contact.first)
