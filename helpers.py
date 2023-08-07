@@ -1,5 +1,3 @@
-import csv
-import os
 from validator_collection import validators
 from datetime import date, datetime
 import pickle
@@ -192,7 +190,8 @@ class Contacts():
         pickle.dump(self._contact_list, output_file)
         return
 
-    def days_to_birthday(self, contact: Contact):
+    @classmethod
+    def days_to_birthday(contact: Contact):
         """
         Returns amount of days between today and given contact's next birthday
 
