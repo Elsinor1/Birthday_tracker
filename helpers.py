@@ -2,12 +2,14 @@ import csv
 import os
 from validator_collection import validators
 from datetime import date, datetime
+import pickle
+from tkinter import messagebox
 
 
 class Contacts():
     def __init__(self):
         self._contact_list = list()
-        
+
         return
 
     def __str__(self):
@@ -16,10 +18,10 @@ class Contacts():
     @property
     def contact_list(self):
         raise Exception("Wrong usage, use .get() method")
-    
+
     @contact_list.setter
     def contact_list(self):
-         raise Exception("Wrong usage, use .add() or .remove method")
+        raise Exception("Wrong usage, use .add() or .remove method")
 
     def get(self):
         return self._contact_list
@@ -33,22 +35,22 @@ class Contacts():
         self._contact_list.remove(self._contact_list[index])
         return
 
-    def load(self, input_path):
-        # file = os.path.basename(input_path)
-        # # file_name = file.split[0]
-        # file_extension = file.split[1]
-        # if not os.path.isfile(input_path) or file_extension != "csv":
-        #     raise ValueError("Not a valid csv file")
-        # with open(input_path) as csvfile:
-        #     reader = csv.DictReader(csvfile):
-        #     for line in reader:
-
-        print("Contacts loaded")
+    def load(self):
+        try:
+            input_file = open("Contacts", "rb")
+        except FileNotFoundError as e:
+            messagebox.showerror(str(e))
+        try:
+            self._contact_list = pickle.load(input_file)
+        except EOFError:
+            pass
         return
 
-    def save(self, output_path):
+    def save(self):
+        output_file = open("Contacts", "wb")
+        pickle.dump(self._contact_list, output_file)
         return
-    
+
     def days_to_birthday(self, contact):
         today = date.today()
         month, day = contact.birthday.split("/")
@@ -57,11 +59,11 @@ class Contacts():
             next = next.replace(year=today.year + 1)
         time_to_birthday = abs(next - today)
         return time_to_birthday.days
-    
+
     def next_b_day(self):
         sorted_list = sorted(self._contact_list, key=self.days_to_birthday)
         if len(sorted_list) > 0:
-            return sorted_list[0]   
+            return sorted_list[0]
         else:
             return None
 
@@ -84,7 +86,6 @@ class Contact():
         if self._phone:
             return_string += ", phone: " + self._phone
         return return_string
-    
 
     def get(self):
         return_string = self.first
@@ -93,7 +94,7 @@ class Contact():
         return_string += f" has birthday on {self.birthday}"
         return return_string
 
-    def change(self, first="", last="",birthday="", email=""):
+    def change(self, first="", last="", birthday="", email=""):
         if first:
             self.first = first
         if last:
@@ -114,9 +115,9 @@ class Contact():
         if not type(first) == str:
             raise TypeError("First name: Name must be a string")
         if not first.isalpha():
-            raise ValueError("First name: All characters must be from alphabet")
+            raise ValueError(
+                "First name: All characters must be from alphabet")
         self._first = first.capitalize()
-
 
     @property
     def last(self):
@@ -132,7 +133,6 @@ class Contact():
         if not last.isalpha():
             raise ValueError("Last name: All characters must be from alphabet")
         self._last = last.capitalize()
-
 
     @property
     def email(self):
@@ -152,7 +152,6 @@ class Contact():
         else:
             self._email = email
 
-
     @property
     def birthday(self):
         return self._birthday
@@ -168,4 +167,3 @@ class Contact():
         # If the date validation goes wrong
         except ValueError:
             raise ValueError("Incorrect date format, usage: MM/DD")
-
