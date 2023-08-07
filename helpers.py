@@ -3,7 +3,6 @@ import os
 from validator_collection import validators
 from datetime import date, datetime
 import pickle
-from tkinter import messagebox
 
 
 class Contacts():
@@ -37,9 +36,9 @@ class Contacts():
 
     def load(self):
         try:
-            input_file = open("Contacts", "rb")
+            input_file = open("contacts", "rb")
         except FileNotFoundError as e:
-            messagebox.showerror(str(e))
+            return
         try:
             self._contact_list = pickle.load(input_file)
         except EOFError:
@@ -47,7 +46,7 @@ class Contacts():
         return
 
     def save(self):
-        output_file = open("Contacts", "wb")
+        output_file = open("contacts", "wb")
         pickle.dump(self._contact_list, output_file)
         return
 

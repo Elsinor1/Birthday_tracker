@@ -9,7 +9,7 @@ class App(tk.Tk):
         super().__init__()
         # WINDOW CONFIGURATION
         self.title("Birthday tracker")
-        self.geometry(f"{350}x{400}")
+        self.geometry(f"{350}x{350}")
 
         # CONTACTS VAR INITIALIZATION
         self.contact_list = Contacts()
@@ -17,7 +17,7 @@ class App(tk.Tk):
 
         # ---HEADER----
         self.header_frame = tk.Frame(
-            self, highlightbackground="blue", highlightthickness=2)
+            self)
         self.header_frame.grid(sticky="nswe", padx=20, pady=(20, 10))
         self.header_label = tk.Label(
             self.header_frame,
@@ -28,24 +28,24 @@ class App(tk.Tk):
 
         # ---MAIN PAGE---
         self.main_frame = tk.Frame(
-            self, highlightbackground="blue", highlightthickness=2)
+            self)
         self.main_frame.grid(row=1, sticky="nsew", padx=20, pady=(0, 20))
         # Birthday frame
         self.birthday_frame = tk.Frame(
-            self.main_frame, highlightbackground="blue", highlightthickness=2)
+            self.main_frame, width=310)
         self.birthday_frame.grid(row=2, sticky="news")
         # Contacts buttons
         self.contact_button = tk.Button(
             self.birthday_frame, command=self.display_contacts, text="Contacts", font=Font(size=15, weight="bold"))
         self.contact_button.grid(
-            row=0, sticky="ns", pady=5, padx=5)
+            row=0, sticky="w", pady=5, padx=5)
         # Display variables
         self.birthday_phrase = tk.StringVar(value="")
         # Checks who has the next b-day
         self.check_next_b()
         # Next b-day display
         self.birthday_label = tk.Label(
-            self.birthday_frame, font=Font(size=15), textvariable=self.birthday_phrase)
+            self.birthday_frame, font=Font(size=15), textvariable=self.birthday_phrase, wraplength=310)
         self.birthday_label.grid(row=1)
 
         # ---CONTACTS---
@@ -53,7 +53,7 @@ class App(tk.Tk):
         self.contact_display = tk.BooleanVar(value=False)
         # Contacts frame
         self.contacts_frame = tk.Frame(
-            self.main_frame, highlightbackground="blue", highlightthickness=2)
+            self.main_frame)
         # Add to list button
         self.add_contact_button = tk.Button(
             self.contacts_frame, command=self.go_to_contact, text="Add new contact")
@@ -84,7 +84,7 @@ class App(tk.Tk):
         # ---ADD CONTACT FRAME---
         # Frame
         self.add_contact_frame = tk.Frame(
-            self.main_frame, highlightbackground="blue", highlightthickness=2)
+            self.main_frame)
         # Label
         self.add_contact_label = tk.Label(
             self.add_contact_frame, text="Add new contact", font=Font(size=20))
@@ -170,8 +170,8 @@ class App(tk.Tk):
             self.birthday_entry.delete(0, 100)
             self.email_entry.delete(0, 100)
             self.listbox_update()
-            self.return_to_contacts()
             self.contact_list.save()
+            self.return_to_contacts()
         return
 
     def remove_from_contacts(self):
@@ -181,6 +181,7 @@ class App(tk.Tk):
             return
         self.contact_list.remove(cur_index)
         self.listbox_update()
+        self.contact_list.save()
         return
 
     def go_to_edit(self):
@@ -233,6 +234,9 @@ class App(tk.Tk):
                 value=next_b_day_contact.birthday)
             self.birthday_phrase.set(
                 f"Next birthday has {self.birthday_name.get()} on {self.birthday_date.get()}")
+        else:
+            self.birthday_phrase.set("")
+        self.update_idletasks()
         return
 
 
