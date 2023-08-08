@@ -12,16 +12,16 @@ def main():
     return
 
 
-def days_to_birthday(date: date):
+def days_to_birthday(date: str):
     p = Contact("Example", date)
 
     return Contacts.days_to_birthday(p)
 
 
-def nearest_birthday(**kwargs):
+def nearest_birthday(contact_dict: dict):
     contacts = Contacts()
-    for input in kwargs:
-        c = Contact(**input)
+    for input in contact_dict:
+        c = Contact(input, contact_dict[input])
         contacts.add(c)
     return contacts.next_b_day().first
 
@@ -471,7 +471,7 @@ class Contacts():
         return
 
     @classmethod
-    def days_to_birthday(contact: Contact):
+    def days_to_birthday(cls, contact: Contact):
         """
         Returns amount of days between today and given contact's next birthday
 

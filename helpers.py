@@ -157,7 +157,10 @@ class Contacts():
 
         :param contact: Contact
         :type contact: Contact
+        :raise TypeError: If given argument is not of type Contact
         """
+        if type(contact) != Contact:
+            raise TypeError("Type must be: Contact")
         self._contact_list.append(contact)
         self._contact_list.sort(key=lambda x: x.first)
         return
@@ -200,6 +203,8 @@ class Contacts():
         :return: Amount of days to next birthday
         :rtype: int
         """
+        if type(contact) != Contact:
+            raise TypeError("Type must be: Contact")
         today = date.today()
         month, day = contact.birthday.split("/")
         next = date(today.year, int(month), int(day))
