@@ -1,5 +1,4 @@
 # BIRTHDAY TRACKER
-#### Video Demo:  https://www.youtube.com/watch?=4ka-r5-knNA&b_channel=Elsinor999
 #### Description: 
 Desktop tkinter application that allows the user to input and store contact information such as name, date of birthday or e-mail address. Application then displays the name and birthday date of the person, that has the closest birtday.
         
@@ -8,6 +7,8 @@ Desktop tkinter application that allows the user to input and store contact info
 - Contact page: Displays list of contacts as well as buttons for adding new contact, editing or removing selected contact.
 
 - Adding / Editing of contact page: Displays entry boxes for input. Changes are saved after using the "Add to contacts" or "Save contact" button.
+
+#### Video Demo:  https://www.youtube.com/watch?=4ka-r5-knNA&b_channel=Elsinor999
 
 #### Design overview: 
 For purpose of easy contact information management two classes have been created. 
